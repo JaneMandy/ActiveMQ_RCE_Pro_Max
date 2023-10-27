@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="test:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/test_jar</output-path>
+    <root id="archive" name="test.jar">
+      <element id="module-output" name="test" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/fusesource/hawtbuf/hawtbuf/1.11/hawtbuf-1.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/springframework/spring-beans/5.3.27/spring-beans-5.3.27.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/springframework/spring-context/5.3.27/spring-context-5.3.27.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/springframework/spring-core/5.3.27/spring-core-5.3.27.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/2.0.6/slf4j-api-2.0.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/springframework/spring-jcl/5.3.27/spring-jcl-5.3.27.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/jakarta/jms/jakarta.jms-api/2.0.3/jakarta.jms-api-2.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/springframework/spring-aop/5.3.27/spring-aop-5.3.27.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/springframework/spring-expression/5.3.27/spring-expression-5.3.27.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/activemq/activemq-client/5.18.2/activemq-client-5.18.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
