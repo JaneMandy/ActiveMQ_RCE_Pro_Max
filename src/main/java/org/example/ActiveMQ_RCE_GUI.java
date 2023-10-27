@@ -48,10 +48,15 @@ public class ActiveMQ_RCE_GUI {
                         "</beans>\n\n");
             }
         });
+
         helpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AreaAppend("[+] 你干嘛哎哟");
+                JFrame frame = new JFrame("Proxy");
+                frame.setContentPane(new Proxy_GUI().panel1);
+                frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                frame.pack();
+                frame.setVisible(true);
             }
         });
     }
@@ -150,6 +155,7 @@ public class ActiveMQ_RCE_GUI {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("ActiveMQ RCE GUI v1.0.0 pro max by:0vercl0k");
+
         frame.setContentPane(new ActiveMQ_RCE_GUI().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
