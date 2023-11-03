@@ -202,7 +202,7 @@ public class ActiveMQ_RCE_GUI {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("ActiveMQ RCE GUI v1.0.0 pro max by:0vercl0k");
+        JFrame frame = new JFrame("ActiveMQ RCE GUI v1.0.3 by:0vercl0k");
         frame.setContentPane(new ActiveMQ_RCE_GUI().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
